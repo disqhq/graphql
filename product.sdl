@@ -1,0 +1,175 @@
+schema {
+  query: ProductEndpoint
+}
+
+type AudioTrack {
+  language: String!
+}
+
+interface CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+}
+
+type Genre {
+  slug: String
+  value: String
+  label: String
+}
+
+type Medium {
+  sid: String!
+  product: Product
+  number: Int
+  titles: [Title]
+}
+
+type Movie implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  releaseDate: String
+  length: Int
+  lengthFormatted: String
+}
+
+type Product {
+  sid: String!
+  gtin: String!
+  ean: String!
+  name: String!
+  releaseDate: String
+  backCover: String
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String): String
+  asin: String
+  discs: Int
+  mediaCount: Int
+  media: [Medium]
+  titlesCount: Int
+  titles: [Title]
+}
+
+type ProductEndpoint {
+  lookup(query: ProductLookupQuery!): [Product]
+}
+
+input ProductLookupQuery {
+  language: String!
+  type: String!
+  value: String!
+}
+
+type Rating {
+  slug: String
+  value: String
+  label: String
+}
+
+type SubtitleTrack {
+  language: String!
+}
+
+type Title {
+  sid: String!
+  creativeWork: CreativeWork!
+  videoTracks: [VideoTrack]
+  audioTracks: [AudioTrack]
+  subtitleTracks: [SubtitleTrack]
+}
+
+type TvShow implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  seasons: [TvShowSeason]
+}
+
+type TvShowEpisode implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  fullName: String!
+  season: Int!
+  number: Int!
+  show: TvShow!
+  length: Int
+  lengthFormatted: String
+}
+
+type TvShowSeason {
+  name: String!
+  number: Int!
+  episodes: Int
+  tmdbId: String
+  overview: String
+}
+
+type VideoTrack {
+  resolution: String
+  aspectRatio: String
+}

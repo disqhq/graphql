@@ -1,0 +1,158 @@
+schema {
+  query: CreativeWorkEndpoint
+}
+
+interface CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+}
+
+type CreativeWorkEndpoint {
+  lookup(query: CreativeWorkLookupQuery!): [CreativeWork]
+  movie(query: MovieQuery!): Movie
+  tvShow(query: TvShowQuery!): TvShow
+  tvShowEpisode(query: TvShowEpisodeQuery!): TvShowEpisode
+}
+
+input CreativeWorkLookupQuery {
+  type: String
+  name: String
+  originalName: String
+  releaseYear: Int
+  language: String
+}
+
+type Genre {
+  slug: String
+  value: String
+  label: String
+}
+
+type Movie implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  releaseDate: String
+  length: Int
+  lengthFormatted: String
+}
+
+input MovieQuery {
+  sid: String
+  imdbId: String
+  tmdbId: String
+  language: String
+}
+
+type Rating {
+  slug: String
+  value: String
+  label: String
+}
+
+type TvShow implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  seasons: [TvShowSeason]
+}
+
+type TvShowEpisode implements CreativeWork {
+  sid: String
+  name: String
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  fullName: String!
+  season: Int!
+  number: Int!
+  show: TvShow!
+  length: Int
+  lengthFormatted: String
+}
+
+input TvShowEpisodeQuery {
+  sid: String
+  show: TvShowQuery
+  season: Int
+  number: Int
+  language: String
+}
+
+input TvShowQuery {
+  sid: String
+  imdbId: String
+  tmdbId: String
+  language: String
+}
+
+type TvShowSeason {
+  name: String!
+  number: Int!
+  episodes: Int
+  tmdbId: String
+  overview: String
+}
