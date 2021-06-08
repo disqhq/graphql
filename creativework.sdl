@@ -36,7 +36,6 @@ input CreativeWorkLookupQuery {
   name: String
   originalName: String
   releaseYear: Int
-  language: String
 }
 
 type Genre {
@@ -74,13 +73,13 @@ input MovieQuery {
   sid: String
   imdbId: String
   tmdbId: String
-  language: String
 }
 
 type Rating {
   slug: String
   value: String
   label: String
+  stars: Int
 }
 
 type TvShow implements CreativeWork {
@@ -139,14 +138,12 @@ input TvShowEpisodeQuery {
   show: TvShowQuery
   season: Int
   number: Int
-  language: String
 }
 
 input TvShowQuery {
   sid: String
   imdbId: String
   tmdbId: String
-  language: String
 }
 
 type TvShowSeason {

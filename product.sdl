@@ -87,7 +87,6 @@ type ProductEndpoint {
 }
 
 input ProductLookupQuery {
-  language: String!
   type: String!
   value: String!
 }
@@ -96,6 +95,7 @@ type Rating {
   slug: String
   value: String
   label: String
+  stars: Int
 }
 
 type SubtitleTrack {

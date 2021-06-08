@@ -74,6 +74,7 @@ type Rating {
   slug: String
   value: String
   label: String
+  stars: Int
 }
 
 type TvChannel {
@@ -84,8 +85,8 @@ type TvChannel {
 }
 
 type TvGuideEndpoint {
-  tvGuide(from: String!, to: String!, package: String): TvProgramConnection
-  tvProgram(sid: String!): TvProgram
+  programs(from: String!, to: String!, package: String): TvProgramConnection
+  program(sid: String!): TvProgram
 }
 
 type TvProgram {
