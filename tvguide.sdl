@@ -13,8 +13,8 @@ interface CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -41,8 +41,8 @@ type Movie implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -86,14 +86,14 @@ type TvChannel {
 
 type TvGuideEndpoint {
   programs(from: String!, to: String!, package: String): TvProgramConnection
-  program(sid: String!): TvProgram
+  program(query: TvProgramQuery!): TvProgram
 }
 
 type TvProgram {
   sid: String!
   slug: String!
-  title: String
-  originalTitle: String
+  name: String
+  originalName: String
   releaseYear: String
   channel: TvChannel!
   creativeWork: CreativeWork
@@ -119,6 +119,10 @@ type TvProgramEdge {
   cursor: String!
 }
 
+input TvProgramQuery {
+  sid: String
+}
+
 type TvShow implements CreativeWork {
   sid: String
   name: String
@@ -130,8 +134,8 @@ type TvShow implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -153,8 +157,8 @@ type TvShowEpisode implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
