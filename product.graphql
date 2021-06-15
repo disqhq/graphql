@@ -17,8 +17,8 @@ interface CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -32,6 +32,25 @@ type Genre {
   slug: String
   value: String
   label: String
+}
+
+input ImageVariationInput {
+  w: Int
+  h: Int
+  dpr: Int
+  bg: String
+  fm: String
+  auto: String
+  minH: Int
+  minW: Int
+  fit: String
+  fill: String
+  fillColor: String
+  trim: String
+  trimColor: String
+  q: Int
+  blur: Int
+  crop: String
 }
 
 type Medium {
@@ -52,8 +71,8 @@ type Movie implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -73,7 +92,7 @@ type Product {
   name: String!
   releaseDate: String
   backCover: String
-  image(w: Int, h: Int, dpr: Int, fm: String, bg: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String): String
+  image(variation: ImageVariationInput): String
   asin: String
   discs: Int
   mediaCount: Int
@@ -121,8 +140,8 @@ type TvShow implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
@@ -144,8 +163,8 @@ type TvShowEpisode implements CreativeWork {
   imdbUrl: String
   genres: [Genre]
   rating: Rating
-  image(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
-  backdrop(w: Int, h: Int, dpr: Int, bg: String, fm: String, auto: String, minH: Int, minW: Int, fit: String, fill: String, fillColor: String, trim: String, trimColor: String, q: Int, blur: Int, crop: String): String
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
   overview: String
   voteAverage: Float
   ageRecommendation: Int
