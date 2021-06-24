@@ -114,7 +114,7 @@ type Rating {
   slug: String
   value: String
   label: String
-  stars: Int
+  score: Int
 }
 
 type SubtitleTrack {
