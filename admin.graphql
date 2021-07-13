@@ -1,5 +1,17 @@
 schema {
-  query: ProductEndpoint
+  query: AdminEndpoint
+  mutation: AdminEndpoint
+}
+
+type AdminEndpoint {
+  tvProgramList(from: String!, to: String!, package: String): TvProgramConnection
+  tvProgramGet(query: TvProgramQuery!): TvProgram
+  tvProgramSave(input: TvProgramInput!): TvProgram
+  productList(after: String, first: Int): ProductConnection
+  productLookup(query: ProductLookupQuery!): [Product]
+  productGet(query: ProductQuery!): Product
+  productSave(input: ProductInput!): Product
+  titleSave(input: TitleInput!): Title
 }
 
 type AudioTrack {
@@ -87,6 +99,21 @@ type Movie implements CreativeWork {
   lengthFormatted: String
 }
 
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
 type Product {
   metadata: ProductMetadata
   sid: String!
@@ -104,8 +131,37 @@ type Product {
   titles: [Title]
 }
 
-type ProductEndpoint {
-  lookup(query: ProductLookupQuery!): [Product]
+"""A connection to a list of items."""
+type ProductConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Information to aid in pagination."""
+  edges: [ProductEdge]
+}
+
+"""An edge in a connection."""
+type ProductEdge {
+  """The item at the end of the edge."""
+  node: Product
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input ProductInput {
+  sid: String
+  gtin: String
+  name: String
+  releaseDate: String
+  status: String
+  backCover: String
+  enhanceBackcover: Boolean
+  image: String
+  enhanceImage: Boolean
+  asin: String
+  discs: Int
+  titles: ProductTitlesInput
 }
 
 input ProductLookupQuery {
@@ -118,6 +174,17 @@ type ProductMetadata {
   updatedAt: String
   completionRate: Float!
   completionRatePercent: Int
+}
+
+input ProductQuery {
+  sid: String
+}
+
+input ProductTitlesInput {
+  query: String!
+  type: String!
+  discNumber: Int
+  replace: Boolean
 }
 
 type Rating {
@@ -142,6 +209,59 @@ type Title {
   videoTracks: [VideoTrack]
   audioTracks: [AudioTrack]
   subtitleTracks: [SubtitleTrack]
+}
+
+input TitleInput {
+  sid: String
+  medium: String
+  product: String
+  discNumber: Int
+}
+
+type TvChannel {
+  sid: String!
+  slug: String!
+  name: String!
+  logo: String
+}
+
+type TvProgram {
+  sid: String!
+  slug: String!
+  name: String
+  originalName: String
+  releaseYear: String
+  channel: TvChannel!
+  creativeWork: CreativeWork
+  startDate: String
+  endDate: String
+}
+
+"""A connection to a list of items."""
+type TvProgramConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Information to aid in pagination."""
+  edges: [TvProgramEdge]
+}
+
+"""An edge in a connection."""
+type TvProgramEdge {
+  """The item at the end of the edge."""
+  node: TvProgram
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input TvProgramInput {
+  sid: String!
+  tmdbId: String
+}
+
+input TvProgramQuery {
+  sid: String
 }
 
 type TvShow implements CreativeWork {
