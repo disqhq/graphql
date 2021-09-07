@@ -9,6 +9,7 @@ type AudioTrack {
 interface CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -57,14 +58,17 @@ type Medium {
   sid: String!
   product: Product
   number: Int
+  volumeName: String
   support: SupportType
   zone: Zone
+  size: String
   titles: [Title]
 }
 
 type Movie implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -84,7 +88,13 @@ type Movie implements CreativeWork {
   isSuitableForTweens: Boolean
   releaseDate: String
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
+}
+
+type Packaging {
+  slug: String
+  value: String
+  label: String
 }
 
 type Product {
@@ -97,15 +107,25 @@ type Product {
   image(variation: ImageVariationInput): String
   backCover(variation: ImageVariationInput): String
   asin: String
+  publisher: String
+  description: String
+  packaging: Packaging
   discs: Int
   mediaCount: Int
   media: [Medium]
   titlesCount: Int
   titles: [Title]
+  children: [Product]
+  childrenCount: Int
 }
 
 type ProductEndpoint {
   lookup(query: ProductLookupQuery!): [Product]
+  product(query: ProductGetQuery!): Product
+}
+
+input ProductGetQuery {
+  sid: String
 }
 
 input ProductLookupQuery {
@@ -138,7 +158,10 @@ type SupportType {
 
 type Title {
   sid: String!
-  creativeWork: CreativeWork!
+  name: String
+  duration: Int
+  size: String
+  creativeWork: CreativeWork
   videoTracks: [VideoTrack]
   audioTracks: [AudioTrack]
   subtitleTracks: [SubtitleTrack]
@@ -147,6 +170,7 @@ type Title {
 type TvShow implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -170,6 +194,7 @@ type TvShow implements CreativeWork {
 type TvShowEpisode implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -192,7 +217,7 @@ type TvShowEpisode implements CreativeWork {
   number: Int!
   show: TvShow!
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
 }
 
 type TvShowSeason {

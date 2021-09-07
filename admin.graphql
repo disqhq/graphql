@@ -1,17 +1,30 @@
 schema {
-  query: AdminEndpoint
-  mutation: AdminEndpoint
+  query: AdminEndpointQuery
+  mutation: AdminEndpointMutation
 }
 
-type AdminEndpoint {
-  tvProgramList(from: String!, to: String!, package: String): TvProgramConnection
-  tvProgramGet(query: TvProgramQuery!): TvProgram
+type AdminEndpointMutation {
   tvProgramSave(input: TvProgramInput!): TvProgram
+  tvProgramRemove(sid: String!): Boolean
+  productSave(input: ProductInput!): Product
+  productRemove(sid: String!): Boolean
+  productChildRemove(sid: String!, child: String!): Boolean
+  titleSave(input: TitleInput!): Title
+  titleRemove(sid: String!, medium: String!): Boolean
+  mediumSave(input: MediumInput!): Medium
+  mediumRemove(sid: String!): Boolean
+}
+
+type AdminEndpointQuery {
+  tvProgramList(from: String!, to: String!, package: String): TvProgramConnection
+  tvProgramGet(query: TvProgramGetQuery!): TvProgram
   productList(after: String, first: Int): ProductConnection
   productLookup(query: ProductLookupQuery!): [Product]
+  creativeWorkLookup(query: CreativeWorkLookupQuery!): [CreativeWork]
   productGet(query: ProductQuery!): Product
-  productSave(input: ProductInput!): Product
-  titleSave(input: TitleInput!): Title
+  packagingEnum: [Packaging]
+  supportTypeEnum: [SupportType]
+  zoneEnum: [Zone]
 }
 
 type AudioTrack {
@@ -21,6 +34,7 @@ type AudioTrack {
 interface CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -38,6 +52,13 @@ interface CreativeWork {
   isSuitableForLittleKids: Boolean
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
+}
+
+input CreativeWorkLookupQuery {
+  type: String
+  name: String
+  originalName: String
+  releaseYear: Int
 }
 
 type Genre {
@@ -69,14 +90,28 @@ type Medium {
   sid: String!
   product: Product
   number: Int
+  volumeName: String
   support: SupportType
   zone: Zone
+  size: String
   titles: [Title]
+}
+
+input MediumInput {
+  sid: String
+  product: String
+  support: String
+  volumeName: String
+  discNumber: Int
+  zone: String
+  hash: String
+  size: String
 }
 
 type Movie implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -96,7 +131,13 @@ type Movie implements CreativeWork {
   isSuitableForTweens: Boolean
   releaseDate: String
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
+}
+
+type Packaging {
+  slug: String
+  value: String
+  label: String
 }
 
 """Information about pagination in a connection."""
@@ -124,11 +165,21 @@ type Product {
   image(variation: ImageVariationInput): String
   backCover(variation: ImageVariationInput): String
   asin: String
+  publisher: String
+  description: String
+  packaging: Packaging
   discs: Int
   mediaCount: Int
   media: [Medium]
   titlesCount: Int
   titles: [Title]
+  children: [Product]
+  childrenCount: Int
+}
+
+input ProductChildrenInput {
+  items: [String]
+  clearExistingItems: Boolean
 }
 
 """A connection to a list of items."""
@@ -158,10 +209,14 @@ input ProductInput {
   backCover: String
   enhanceBackcover: Boolean
   image: String
+  publisher: String
+  packaging: String
   enhanceImage: Boolean
   asin: String
+  description: String
   discs: Int
   titles: ProductTitlesInput
+  children: ProductChildrenInput
 }
 
 input ProductLookupQuery {
@@ -181,10 +236,8 @@ input ProductQuery {
 }
 
 input ProductTitlesInput {
-  query: String!
-  type: String!
-  discNumber: Int
-  replace: Boolean
+  items: [TitleInput]
+  clearExistingItems: Boolean
 }
 
 type Rating {
@@ -205,7 +258,10 @@ type SupportType {
 
 type Title {
   sid: String!
-  creativeWork: CreativeWork!
+  name: String
+  duration: Int
+  size: String
+  creativeWork: CreativeWork
   videoTracks: [VideoTrack]
   audioTracks: [AudioTrack]
   subtitleTracks: [SubtitleTrack]
@@ -213,9 +269,14 @@ type Title {
 
 input TitleInput {
   sid: String
+  tmdbId: String
   medium: String
+  hash: String
+  name: String
   product: String
   discNumber: Int
+  duration: Int
+  size: String
 }
 
 type TvChannel {
@@ -255,18 +316,19 @@ type TvProgramEdge {
   cursor: String!
 }
 
+input TvProgramGetQuery {
+  sid: String
+}
+
 input TvProgramInput {
   sid: String!
   tmdbId: String
 }
 
-input TvProgramQuery {
-  sid: String
-}
-
 type TvShow implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -290,6 +352,7 @@ type TvShow implements CreativeWork {
 type TvShowEpisode implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -312,7 +375,7 @@ type TvShowEpisode implements CreativeWork {
   number: Int!
   show: TvShow!
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
 }
 
 type TvShowSeason {

@@ -1,5 +1,9 @@
 schema {
-  query: CreativeWorkEndpoint
+  query: TitleEndpoint
+}
+
+type AudioTrack {
+  language: String!
 }
 
 interface CreativeWork {
@@ -23,20 +27,6 @@ interface CreativeWork {
   isSuitableForLittleKids: Boolean
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
-}
-
-type CreativeWorkEndpoint {
-  lookup(query: CreativeWorkLookupQuery!): [CreativeWork]
-  movie(query: MovieQuery!): Movie
-  tvShow(query: TvShowQuery!): TvShow
-  tvShowEpisode(query: TvShowEpisodeQuery!): TvShowEpisode
-}
-
-input CreativeWorkLookupQuery {
-  type: String
-  name: String
-  originalName: String
-  releaseYear: Int
 }
 
 type Genre {
@@ -90,17 +80,34 @@ type Movie implements CreativeWork {
   lengthFmt: String
 }
 
-input MovieQuery {
-  sid: String
-  imdbId: String
-  tmdbId: String
-}
-
 type Rating {
   slug: String
   value: String
   label: String
   score: Int
+}
+
+type SubtitleTrack {
+  language: String!
+}
+
+type Title {
+  sid: String!
+  name: String
+  duration: Int
+  size: String
+  creativeWork: CreativeWork
+  videoTracks: [VideoTrack]
+  audioTracks: [AudioTrack]
+  subtitleTracks: [SubtitleTrack]
+}
+
+type TitleEndpoint {
+  title(query: TitleGetQuery!): Title
+}
+
+input TitleGetQuery {
+  sid: String
 }
 
 type TvShow implements CreativeWork {
@@ -156,23 +163,15 @@ type TvShowEpisode implements CreativeWork {
   lengthFmt: String
 }
 
-input TvShowEpisodeQuery {
-  sid: String
-  show: TvShowQuery
-  season: Int
-  number: Int
-}
-
-input TvShowQuery {
-  sid: String
-  imdbId: String
-  tmdbId: String
-}
-
 type TvShowSeason {
   name: String!
   number: Int!
   episodes: Int
   tmdbId: String
   overview: String
+}
+
+type VideoTrack {
+  resolution: String
+  aspectRatio: String
 }

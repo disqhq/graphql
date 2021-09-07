@@ -5,6 +5,7 @@ schema {
 interface CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -52,6 +53,7 @@ input ImageVariationInput {
 type Movie implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -71,7 +73,7 @@ type Movie implements CreativeWork {
   isSuitableForTweens: Boolean
   releaseDate: String
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
 }
 
 """Information about pagination in a connection."""
@@ -105,7 +107,7 @@ type TvChannel {
 
 type TvGuideEndpoint {
   programs(from: String!, to: String!, package: String): TvProgramConnection
-  program(query: TvProgramQuery!): TvProgram
+  program(query: TvProgramGetQuery!): TvProgram
 }
 
 type TvProgram {
@@ -138,13 +140,14 @@ type TvProgramEdge {
   cursor: String!
 }
 
-input TvProgramQuery {
+input TvProgramGetQuery {
   sid: String
 }
 
 type TvShow implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -168,6 +171,7 @@ type TvShow implements CreativeWork {
 type TvShowEpisode implements CreativeWork {
   sid: String
   name: String
+  duration: Int
   originalName: String
   type: String
   tmdbId: String
@@ -190,7 +194,7 @@ type TvShowEpisode implements CreativeWork {
   number: Int!
   show: TvShow!
   length: Int
-  lengthFormatted: String
+  lengthFmt: String
 }
 
 type TvShowSeason {
