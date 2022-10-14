@@ -40,6 +40,8 @@ input ImageVariationInput {
   auto: String
   minH: Int
   minW: Int
+  maxH: Int
+  maxW: Int
   fit: String
   fill: String
   fillColor: String
@@ -48,6 +50,7 @@ input ImageVariationInput {
   q: Int
   blur: Int
   crop: String
+  ar: String
 }
 
 type Movie implements CreativeWork {
@@ -74,21 +77,12 @@ type Movie implements CreativeWork {
   releaseDate: String
   length: Int
   lengthFmt: String
+  poster(variation: ImageVariationInput): String
 }
 
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: String
+input QueryPaginationInput {
+  offset: Int
+  limit: Int
 }
 
 type Rating {
@@ -106,7 +100,7 @@ type TvChannel {
 }
 
 type TvGuideEndpoint {
-  programs(from: String!, to: String!, package: String): TvProgramConnection
+  programs(query: TvProgramListQuery!): [TvProgram]
   program(query: TvProgramGetQuery!): TvProgram
 }
 
@@ -122,26 +116,16 @@ type TvProgram {
   endDate: String
 }
 
-"""A connection to a list of items."""
-type TvProgramConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """Information to aid in pagination."""
-  edges: [TvProgramEdge]
-}
-
-"""An edge in a connection."""
-type TvProgramEdge {
-  """The item at the end of the edge."""
-  node: TvProgram
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
 input TvProgramGetQuery {
   sid: String
+}
+
+input TvProgramListQuery {
+  from: String!
+  to: String!
+  package: String
+  offset: Int
+  limit: Int
 }
 
 type TvShow implements CreativeWork {
@@ -166,6 +150,7 @@ type TvShow implements CreativeWork {
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
   seasons: [TvShowSeason]
+  poster(variation: ImageVariationInput): String
 }
 
 type TvShowEpisode implements CreativeWork {
@@ -189,18 +174,21 @@ type TvShowEpisode implements CreativeWork {
   isSuitableForLittleKids: Boolean
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
-  fullName: String!
-  season: Int!
-  number: Int!
+  season: TvShowSeason!
   show: TvShow!
+  fullName: String!
+  shortName: String!
+  number: Int!
   length: Int
   lengthFmt: String
 }
 
 type TvShowSeason {
+  sid: String
+  show: TvShow!
   name: String!
   number: Int!
-  episodes: Int
   tmdbId: String
   overview: String
+  episodes(pagination: QueryPaginationInput): [TvShowEpisode]
 }

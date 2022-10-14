@@ -1,5 +1,5 @@
 schema {
-  query: ProductEndpoint
+  query: InventoryEndpoint
 }
 
 type AspectRatio {
@@ -88,6 +88,36 @@ input ImageVariationInput {
   ar: String
 }
 
+type InventoryEndpoint {
+  inventory(query: InventoryGetQuery!): [Item]
+  inventoryCount(query: InventoryGetQuery!): Int!
+  item(query: ItemGetQuery!): Item
+}
+
+input InventoryGetQuery {
+  owner: String
+  offset: Int
+  limit: Int
+}
+
+type Item {
+  sid: String!
+  dateAdded: String
+  product: Product!
+  sku: String!
+  label: String!
+  barcode(h: Int): SvgImage!
+  shareCapital: Int
+  userShares(user: String!): Int
+  children: [Item]
+  childrenCount: Int
+  price: Money
+}
+
+input ItemGetQuery {
+  sid: String
+}
+
 type Language {
   code: String
   name: String
@@ -104,15 +134,16 @@ type Medium {
   titles: [MediumTitle]
 }
 
-input MediumGetQuery {
-  sid: String
-}
-
 type MediumTitle {
   medium: Medium
   title: Title
   order: Int
   activated: Boolean
+}
+
+type Money {
+  amount: Int!
+  currency: String!
 }
 
 type Movie implements CreativeWork {
@@ -172,21 +203,6 @@ type Product {
   titles: [Title]
   children: [Product]
   childrenCount: Int
-}
-
-type ProductEndpoint {
-  lookup(query: ProductLookupQuery!): [Product]
-  product(query: ProductGetQuery!): Product
-  medium(query: MediumGetQuery!): Medium
-}
-
-input ProductGetQuery {
-  sid: String
-}
-
-input ProductLookupQuery {
-  type: String
-  value: String!
 }
 
 type ProductMetadata {

@@ -27,9 +27,12 @@ interface CreativeWork {
 
 type CreativeWorkEndpoint {
   lookup(query: CreativeWorkLookupQuery!): [CreativeWork]
-  movie(query: MovieQuery!): Movie
-  tvShow(query: TvShowQuery!): TvShow
-  tvShowEpisode(query: TvShowEpisodeQuery!): TvShowEpisode
+  movie(query: MovieGetQuery!): Movie
+  tvShow(query: TvShowGetQuery!): TvShow
+  tvShowSeason(query: TvShowSeasonGetQuery!): TvShowSeason
+  tvShowSeasonEpisodes(query: TvShowSeasonEpisodesGetQuery!): [TvShowEpisode]
+  tvShowSeasonEpisodesCount(query: TvShowSeasonEpisodesGetQuery!): Int!
+  tvShowEpisode(query: TvShowEpisodeGetQuery!): TvShowEpisode
 }
 
 input CreativeWorkLookupQuery {
@@ -54,6 +57,8 @@ input ImageVariationInput {
   auto: String
   minH: Int
   minW: Int
+  maxH: Int
+  maxW: Int
   fit: String
   fill: String
   fillColor: String
@@ -62,6 +67,7 @@ input ImageVariationInput {
   q: Int
   blur: Int
   crop: String
+  ar: String
 }
 
 type Movie implements CreativeWork {
@@ -88,12 +94,18 @@ type Movie implements CreativeWork {
   releaseDate: String
   length: Int
   lengthFmt: String
+  poster(variation: ImageVariationInput): String
 }
 
-input MovieQuery {
+input MovieGetQuery {
   sid: String
   imdbId: String
   tmdbId: String
+}
+
+input QueryPaginationInput {
+  offset: Int
+  limit: Int
 }
 
 type Rating {
@@ -125,6 +137,7 @@ type TvShow implements CreativeWork {
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
   seasons: [TvShowSeason]
+  poster(variation: ImageVariationInput): String
 }
 
 type TvShowEpisode implements CreativeWork {
@@ -148,31 +161,46 @@ type TvShowEpisode implements CreativeWork {
   isSuitableForLittleKids: Boolean
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
-  fullName: String!
-  season: Int!
-  number: Int!
+  season: TvShowSeason!
   show: TvShow!
+  fullName: String!
+  shortName: String!
+  number: Int!
   length: Int
   lengthFmt: String
 }
 
-input TvShowEpisodeQuery {
+input TvShowEpisodeGetQuery {
   sid: String
-  show: TvShowQuery
+  show: TvShowGetQuery
   season: Int
   number: Int
 }
 
-input TvShowQuery {
+input TvShowGetQuery {
   sid: String
   imdbId: String
   tmdbId: String
 }
 
 type TvShowSeason {
+  sid: String
+  show: TvShow!
   name: String!
   number: Int!
-  episodes: Int
   tmdbId: String
   overview: String
+  episodes(pagination: QueryPaginationInput): [TvShowEpisode]
+}
+
+input TvShowSeasonEpisodesGetQuery {
+  sid: String
+  offset: Int
+  limit: Int
+}
+
+input TvShowSeasonGetQuery {
+  sid: String
+  show: TvShowGetQuery
+  number: Int
 }

@@ -1,5 +1,5 @@
 schema {
-  query: ProductEndpoint
+  query: CatalogEndpoint
 }
 
 type AspectRatio {
@@ -28,6 +28,16 @@ type BitRate {
   value: Int
 }
 
+type CatalogEndpoint {
+  availabilities(query: CreativeWorkAvailabilitiesGetQuery!): [Item]
+  availabilitiesCount(query: CreativeWorkAvailabilitiesGetQuery!): Int!
+  movies(query: MovieCatalogGetQuery!): [Movie]
+  moviesCount(query: MovieCatalogGetQuery!): Int!
+  tvShows(query: TvShowCatalogGetQuery!): [TvShow]
+  tvShowsCount(query: TvShowCatalogGetQuery!): Int!
+  titles(query: CreativeWorkTitlesGetQuery!): [Title]
+}
+
 type ChannelLayout {
   value: String
   label: String
@@ -54,6 +64,15 @@ interface CreativeWork {
   isSuitableForLittleKids: Boolean
   isSuitableForBigKids: Boolean
   isSuitableForTweens: Boolean
+}
+
+input CreativeWorkAvailabilitiesGetQuery {
+  sid: String!
+}
+
+input CreativeWorkTitlesGetQuery {
+  sid: String!
+  owner: String
 }
 
 type FrameRate {
@@ -88,6 +107,20 @@ input ImageVariationInput {
   ar: String
 }
 
+type Item {
+  sid: String!
+  dateAdded: String
+  product: Product!
+  sku: String!
+  label: String!
+  barcode(h: Int): SvgImage!
+  shareCapital: Int
+  userShares(user: String!): Int
+  children: [Item]
+  childrenCount: Int
+  price: Money
+}
+
 type Language {
   code: String
   name: String
@@ -104,15 +137,16 @@ type Medium {
   titles: [MediumTitle]
 }
 
-input MediumGetQuery {
-  sid: String
-}
-
 type MediumTitle {
   medium: Medium
   title: Title
   order: Int
   activated: Boolean
+}
+
+type Money {
+  amount: Int!
+  currency: String!
 }
 
 type Movie implements CreativeWork {
@@ -140,6 +174,14 @@ type Movie implements CreativeWork {
   length: Int
   lengthFmt: String
   poster(variation: ImageVariationInput): String
+}
+
+input MovieCatalogGetQuery {
+  owner: String
+  sort: String
+  filters: [QueryFilter]
+  offset: Int
+  limit: Int
 }
 
 type Packaging {
@@ -174,26 +216,16 @@ type Product {
   childrenCount: Int
 }
 
-type ProductEndpoint {
-  lookup(query: ProductLookupQuery!): [Product]
-  product(query: ProductGetQuery!): Product
-  medium(query: MediumGetQuery!): Medium
-}
-
-input ProductGetQuery {
-  sid: String
-}
-
-input ProductLookupQuery {
-  type: String
-  value: String!
-}
-
 type ProductMetadata {
   createdAt: String
   updatedAt: String
   completionRate: Float!
   completionRatePercent: Int
+}
+
+input QueryFilter {
+  key: String!
+  values: [String]!
 }
 
 input QueryPaginationInput {
@@ -282,6 +314,14 @@ type TvShow implements CreativeWork {
   isSuitableForTweens: Boolean
   seasons: [TvShowSeason]
   poster(variation: ImageVariationInput): String
+}
+
+input TvShowCatalogGetQuery {
+  owner: String
+  sort: String
+  filters: [QueryFilter]
+  offset: Int
+  limit: Int
 }
 
 type TvShowEpisode implements CreativeWork {
