@@ -1,0 +1,194 @@
+schema {
+  query: TvGuideEndpoint
+}
+
+interface CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+}
+
+type Genre {
+  slug: String
+  value: String
+  label: String
+}
+
+input ImageVariationInput {
+  w: Int
+  h: Int
+  dpr: Int
+  bg: String
+  fm: String
+  auto: String
+  minH: Int
+  minW: Int
+  maxH: Int
+  maxW: Int
+  fit: String
+  fill: String
+  fillColor: String
+  trim: String
+  trimColor: String
+  q: Int
+  blur: Int
+  crop: String
+  ar: String
+}
+
+type Movie implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  releaseDate: String
+  length: Int
+  lengthFmt: String
+  poster(variation: ImageVariationInput): String
+}
+
+input QueryPaginationInput {
+  offset: Int
+  limit: Int
+}
+
+type Rating {
+  slug: String
+  value: String
+  label: String
+  score: Int
+}
+
+type TvChannel {
+  sid: String!
+  slug: String!
+  name: String!
+  logo: String
+}
+
+type TvGuideEndpoint {
+  programs(query: TvProgramListQuery!): [TvProgram]
+  program(query: TvProgramGetQuery!): TvProgram
+}
+
+type TvProgram {
+  sid: String!
+  slug: String!
+  name: String
+  originalName: String
+  releaseYear: String
+  channel: TvChannel!
+  creativeWork: CreativeWork
+  startDate: String
+  endDate: String
+}
+
+input TvProgramGetQuery {
+  sid: String
+}
+
+input TvProgramListQuery {
+  from: String!
+  to: String!
+  package: String
+  offset: Int
+  limit: Int
+}
+
+type TvShow implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  seasons: [TvShowSeason]
+  poster(variation: ImageVariationInput): String
+}
+
+type TvShowEpisode implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  season: TvShowSeason!
+  show: TvShow!
+  fullName: String!
+  shortName: String!
+  number: Int!
+  length: Int
+  lengthFmt: String
+}
+
+type TvShowSeason {
+  sid: String
+  show: TvShow!
+  name: String!
+  number: Int!
+  tmdbId: String
+  overview: String
+  episodes(pagination: QueryPaginationInput): [TvShowEpisode]
+}

@@ -1,0 +1,206 @@
+schema {
+  query: CreativeWorkEndpoint
+}
+
+interface CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+}
+
+type CreativeWorkEndpoint {
+  lookup(query: CreativeWorkLookupQuery!): [CreativeWork]
+  movie(query: MovieGetQuery!): Movie
+  tvShow(query: TvShowGetQuery!): TvShow
+  tvShowSeason(query: TvShowSeasonGetQuery!): TvShowSeason
+  tvShowSeasonEpisodes(query: TvShowSeasonEpisodesGetQuery!): [TvShowEpisode]
+  tvShowSeasonEpisodesCount(query: TvShowSeasonEpisodesGetQuery!): Int!
+  tvShowEpisode(query: TvShowEpisodeGetQuery!): TvShowEpisode
+}
+
+input CreativeWorkLookupQuery {
+  type: String
+  name: String
+  originalName: String
+  releaseYear: Int
+}
+
+type Genre {
+  slug: String
+  value: String
+  label: String
+}
+
+input ImageVariationInput {
+  w: Int
+  h: Int
+  dpr: Int
+  bg: String
+  fm: String
+  auto: String
+  minH: Int
+  minW: Int
+  maxH: Int
+  maxW: Int
+  fit: String
+  fill: String
+  fillColor: String
+  trim: String
+  trimColor: String
+  q: Int
+  blur: Int
+  crop: String
+  ar: String
+}
+
+type Movie implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  releaseDate: String
+  length: Int
+  lengthFmt: String
+  poster(variation: ImageVariationInput): String
+}
+
+input MovieGetQuery {
+  sid: String
+  imdbId: String
+  tmdbId: String
+}
+
+input QueryPaginationInput {
+  offset: Int
+  limit: Int
+}
+
+type Rating {
+  slug: String
+  value: String
+  label: String
+  score: Int
+}
+
+type TvShow implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  seasons: [TvShowSeason]
+  poster(variation: ImageVariationInput): String
+}
+
+type TvShowEpisode implements CreativeWork {
+  sid: String
+  name: String
+  duration: Int
+  originalName: String
+  type: String
+  tmdbId: String
+  tmdbUrl: String
+  imdbId: String
+  imdbUrl: String
+  genres: [Genre]
+  rating: Rating
+  image(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  overview: String
+  voteAverage: Float
+  ageRecommendation: Int
+  releaseYear: Int
+  isSuitableForLittleKids: Boolean
+  isSuitableForBigKids: Boolean
+  isSuitableForTweens: Boolean
+  season: TvShowSeason!
+  show: TvShow!
+  fullName: String!
+  shortName: String!
+  number: Int!
+  length: Int
+  lengthFmt: String
+}
+
+input TvShowEpisodeGetQuery {
+  sid: String
+  show: TvShowGetQuery
+  season: Int
+  number: Int
+}
+
+input TvShowGetQuery {
+  sid: String
+  imdbId: String
+  tmdbId: String
+}
+
+type TvShowSeason {
+  sid: String
+  show: TvShow!
+  name: String!
+  number: Int!
+  tmdbId: String
+  overview: String
+  episodes(pagination: QueryPaginationInput): [TvShowEpisode]
+}
+
+input TvShowSeasonEpisodesGetQuery {
+  sid: String
+  offset: Int
+  limit: Int
+}
+
+input TvShowSeasonGetQuery {
+  sid: String
+  show: TvShowGetQuery
+  number: Int
+}
