@@ -1,0 +1,215 @@
+schema {
+  query: QueryEndpoint
+  mutation: MutationEndpoint
+}
+
+type QueryEndpoint {
+  userInfo: User
+  movie(sid: String!): Movie
+  catalog(slug: String!): Catalog
+  tvShow(sid: String!): TvShow
+  tvShowSeason(sid: String!): TvShowSeason
+  item(sid: String!): Item
+}
+
+type User {
+  sid: String!
+  username: String!
+  email: String!
+  playlists: [UserPlaylist]
+  avatar(variation: ImageVariationInput): String
+}
+
+type UserPlaylist {
+  name: String!
+  url: String!
+}
+
+input ImageVariationInput {
+  w: Int
+  h: Int
+  dpr: Int
+  bg: String
+  fm: String
+  auto: String
+  minH: Int
+  minW: Int
+  maxH: Int
+  maxW: Int
+  fit: String
+  fill: String
+  fillColor: String
+  trim: String
+  trimColor: String
+  q: Int
+  blur: Int
+  crop: String
+  ar: String
+}
+
+type Movie implements CatalogEntry & Playable & Buyable {
+  sid: String!
+  type: String!
+  name: String!
+  overview: String
+  rating: Rating
+  length: Int
+  lengthFmt: String
+  releaseYear: Int
+  ageRecommendation: Int
+  genres: [Genre]
+  poster(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  playable: Boolean!
+  availableTitles: [Title]
+  selectedTitle: Title
+  buyable: Boolean!
+  availableOffers: [Item]
+  selectedOffer: Item
+}
+
+interface CatalogEntry {
+  sid: String!
+  type: String!
+  name: String!
+  overview: String
+  rating: Rating
+  length: Int
+  lengthFmt: String
+  releaseYear: Int
+  ageRecommendation: Int
+  genres: [Genre]
+  poster(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+}
+
+type Rating {
+  value: String
+  slug: String
+  label: String
+}
+
+type Genre {
+  slug: String
+  value: String
+  label: String
+}
+
+interface Playable {
+  playable: Boolean!
+  availableTitles: [Title]
+  selectedTitle: Title
+}
+
+type Title {
+  sid: String!
+  available: Boolean!
+  playlist(debug: Int): String
+  duration: Int
+}
+
+interface Buyable {
+  buyable: Boolean!
+  availableOffers: [Item]
+  selectedOffer: Item
+}
+
+type Item {
+  sid: String!
+  sku: String!
+  name: String!
+  image(variation: ImageVariationInput): String
+  price: Money
+}
+
+type Money {
+  amount: Int!
+  amountDecimal: Float!
+  currency: String!
+}
+
+type Catalog {
+  slug: String!
+  title: String!
+  sections: [CatalogSection]!
+}
+
+type CatalogSection {
+  title: String!
+  filters: String!
+  index: String!
+  limit: Int!
+}
+
+type TvShow implements CatalogEntry {
+  sid: String!
+  type: String!
+  name: String!
+  overview: String
+  rating: Rating
+  length: Int
+  lengthFmt: String
+  releaseYear: Int
+  ageRecommendation: Int
+  genres: [Genre]
+  poster(variation: ImageVariationInput): String
+  backdrop(variation: ImageVariationInput): String
+  seasons: [TvShowSeason]
+}
+
+type TvShowSeason {
+  sid: String!
+  number: Int!
+  show: TvShow
+  episodes(after: String, first: Int): TvShowEpisodeConnection
+}
+
+"A connection to a list of items."
+type TvShowEpisodeConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+
+  "Information to aid in pagination."
+  edges: [TvShowEpisodeEdge]
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "When paginating forwards, are there more items?"
+  hasNextPage: Boolean!
+
+  "When paginating backwards, are there more items?"
+  hasPreviousPage: Boolean!
+
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+"An edge in a connection."
+type TvShowEpisodeEdge {
+  "The item at the end of the edge."
+  node: TvShowEpisode
+
+  "A cursor for use in pagination."
+  cursor: String!
+}
+
+type TvShowEpisode implements Playable & Buyable {
+  playable: Boolean!
+  availableTitles: [Title]
+  selectedTitle: Title
+  buyable: Boolean!
+  availableOffers: [Item]
+  selectedOffer: Item
+  sid: String!
+  name: String!
+  overview: String
+  image(variation: ImageVariationInput): String
+}
+
+type MutationEndpoint {
+  purchase(sid: String!): Item
+}
