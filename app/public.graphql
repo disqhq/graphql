@@ -51,7 +51,7 @@ type Movie implements CatalogEntry & Playable & Buyable {
   sid: String!
   type: String!
   name: String!
-  overview: String
+  overview(sentences: Int): String
   rating: Rating
   length: Int
   lengthFmt: String
@@ -72,7 +72,7 @@ interface CatalogEntry {
   sid: String!
   type: String!
   name: String!
-  overview: String
+  overview(sentences: Int): String
   rating: Rating
   length: Int
   lengthFmt: String
@@ -145,7 +145,7 @@ type TvShow implements CatalogEntry {
   sid: String!
   type: String!
   name: String!
-  overview: String
+  overview(sentences: Int): String
   rating: Rating
   length: Int
   lengthFmt: String
@@ -161,7 +161,7 @@ type TvShowSeason {
   sid: String!
   number: Int!
   show: TvShow
-  episodes(after: String, first: Int): TvShowEpisodeConnection
+  episodes(after: String, before: String, first: Int, last: Int): TvShowEpisodeConnection
 }
 
 "A connection to a list of items."
@@ -206,7 +206,7 @@ type TvShowEpisode implements Playable & Buyable {
   selectedOffer: Item
   sid: String!
   name: String!
-  overview: String
+  overview(sentences: Int): String
   image(variation: ImageVariationInput): String
 }
 
